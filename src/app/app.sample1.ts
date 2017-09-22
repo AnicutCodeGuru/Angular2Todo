@@ -8,4 +8,4 @@ import { Component } from '@angular/core';
 
 export class SampleComponent  { 
   msg:string="This is a new component";
-}
+} 
