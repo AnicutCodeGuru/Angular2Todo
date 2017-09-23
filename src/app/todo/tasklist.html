@@ -1,6 +1,6 @@
 <div class="row" >
     <div class="col-md-12" >
-        <div class="row" >
+        <div class="row"  [hidden]="taskList.length==0" >
             <div class="col-md-12" >
                 <table  class="table table-bordered table-striped"  >
                     <thead>
@@ -22,7 +22,12 @@
                     <tbody>
                         <tr *ngFor="let task of taskList let i=index "  >
                             <td >{{i+1}}</td>
-                            <td  class="text-center" >{{task.taskName}}</td>
+                            <td  class="text-center" (dblclick)="task.toggleHide()" >
+                                <div  [hidden]="!task.hide"   >{{task.taskName}}</div>
+                                <div  [hidden]="task.hide"  >
+                                    <input type="text"  [(ngModel)]="task.taskName"  class="form-control"  (blur)="task.toggleHide()"  />
+                                </div>
+                            </td>
                             <td  class="text-center" >{{task.taskStatus}}</td>
                             <td  class="text-center" >
                                <input type="button" *ngIf="task.taskStatus=='Pending'" value="Complete"  class="btn btn-success" (click)="completeTask(task)"  />
@@ -32,6 +37,14 @@
                     </tbody>
                 </table>
             </div>                    
+        </div>
+        <div class="row" >
+            <div class="col-md-4" >
+                <input type="text"  class="form-control"  [(ngModel)]="newTask.taskName" />
+            </div>
+            <div class="col-md-3" >
+                   <input type="button"  [disabled]="newTask.taskName==''"  value="Add task"  class="btn btn-primary"  (click)="addTask()"   /> 
+            </div>  
         </div>
     </div>
 </div>

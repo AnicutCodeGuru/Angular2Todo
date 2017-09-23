@@ -10,7 +10,10 @@ import {Todo} from "./todo";
 export class TaskList  { 
     taskList:Todo[] = [];
 
+    newTask:Todo;
+
     constructor(){
+        this.newTask = new Todo("","")
         this.taskList.push(new Todo("Buy Sugar","Pending"));
         this.taskList.push(new Todo("Buy Wheat","Pending"));
         this.taskList.push(new Todo("Buy Water","Pending"));
@@ -21,7 +24,13 @@ export class TaskList  {
     }
 
     deleteTask(index:number){
-        alert(1);    
         this.taskList.splice(index,1)
+    }
+
+    addTask(){
+        var newTask=new Todo(this.newTask.taskName, "Pending");
+        this.taskList.push(newTask);
+
+        this.newTask.taskName="";
     }
 }
