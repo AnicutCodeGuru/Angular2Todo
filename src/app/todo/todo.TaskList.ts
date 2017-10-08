@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import {Todo} from "./todo";
+import {TodoService} from "./srvc.todo";
+
 
 @Component({
   selector: 'task-list',
@@ -12,25 +14,49 @@ export class TaskList  {
 
     newTask:Todo;
 
-    constructor(){
-        this.newTask = new Todo("","")
-        this.taskList.push(new Todo("Buy Sugar","Pending"));
-        this.taskList.push(new Todo("Buy Wheat","Pending"));
-        this.taskList.push(new Todo("Buy Water","Pending"));
+    constructor(private todoSrvc:TodoService){
+
+        this.newTask = new Todo("","","")
+        this.getTaskList();
     }
 
     completeTask(task:Todo){
         task.taskStatus="Completed";
+        this.todoSrvc.updateTask(task).subscribe(data => {
+            alert(data.msg);
+            this.getTaskList();
+        });
     }
 
-    deleteTask(index:number){
-        this.taskList.splice(index,1)
+    deleteTask(task:Todo){
+        //this.taskList.splice(index,1)
+        this.todoSrvc.deleteTask(task).subscribe(data => {
+            alert(data.msg);
+            this.getTaskList();
+        });;
     }
 
     addTask(){
-        var newTask=new Todo(this.newTask.taskName, "Pending");
-        this.taskList.push(newTask);
+        this.todoSrvc.createTask(new Todo(this.newTask.taskName,"Pending","")).subscribe(data => {
+            alert(data.msg);
+            this.newTask.taskName=""
+            this.getTaskList();
+        });
+
+        
 
         this.newTask.taskName="";
     }
+
+    getTaskList=()=>{
+        this.taskList=[];
+        this.todoSrvc.getTaskList().subscribe(data => {
+            for(var i=0;i<data.length;i++){
+                this.taskList.push(new Todo(data[i].taskName,data[i].taskStatus,data[i]._id) );
+            }
+        });
+
+    }
+
+    
 }
